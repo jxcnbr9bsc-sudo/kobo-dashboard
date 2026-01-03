@@ -1,0 +1,452 @@
+
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kobo Dashboard</title>
+    <style>
+        /* Import font DM Sans da Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: #FFFFFF;
+            color: #000000;
+            padding: 20px;
+            overflow: hidden;
+            width: 1024px;
+            height: 758px;
+            display: flex;
+            letter-spacing: -0.05em; /* Kerning globale -5% */
+            /* Flex compatibile con WebKit 2013 */
+        }
+        
+        /* Container principale a 2 colonne */
+        .container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            /* Flex senza gap (non supportato) */
+        }
+        
+        /* Colonna Sinistra - Info (45%) */
+        .info-column {
+            width: 45%;
+            display: flex;
+            flex-direction: column;
+            padding-right: 20px;
+            border-right: 2px solid #000000;
+        }
+        
+        /* Colonna Destra - Agenda (55%) */
+        .agenda-column {
+            width: 55%;
+            display: flex;
+            flex-direction: column;
+            padding-left: 20px;
+        }
+        
+        /* Sezione Orologio */
+        .clock-section {
+            margin-bottom: 40px;
+        }
+        
+        .clock-time {
+            font-size: 120px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+        
+        .clock-date {
+            font-size: 24px;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: -0.02em; /* Kerning leggermente ridotto per maiuscole */
+        }
+        
+        /* Sezione Meteo */
+        .weather-section {
+            margin-bottom: 30px;
+        }
+        
+        .weather-title {
+            font-size: 18px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: -0.02em; /* Kerning leggermente ridotto per maiuscole */
+            margin-bottom: 15px;
+        }
+        
+        .weather-current {
+            margin-bottom: 20px;
+        }
+        
+        .weather-temp {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .weather-desc {
+            font-size: 16px;
+            font-weight: 400;
+            margin-bottom: 8px;
+        }
+        
+        .weather-wind,
+        .weather-rain {
+            font-size: 14px;
+            font-weight: 400;
+            margin-bottom: 4px;
+        }
+        
+        .weather-forecast {
+            margin-top: 20px;
+        }
+        
+        .forecast-item {
+            font-size: 14px;
+            font-weight: 400;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #000000;
+        }
+        
+        .forecast-item:last-child {
+            border-bottom: none;
+        }
+        
+        /* Sezione Agenda */
+        .agenda-title {
+            font-size: 32px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.03em; /* Kerning leggermente ridotto per maiuscole grandi */
+            margin-bottom: 30px;
+        }
+        
+        .events-list {
+            list-style: none;
+        }
+        
+        .event-item {
+            font-size: 18px;
+            font-weight: 400;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #000000;
+        }
+        
+        .event-item:last-child {
+            border-bottom: none;
+        }
+        
+        /* Loading e Error states */
+        .loading {
+            font-size: 14px;
+            font-weight: 400;
+            color: #000000;
+        }
+        
+        .error {
+            font-size: 14px;
+            font-weight: 400;
+            color: #000000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Colonna Sinistra - Info -->
+        <div class="info-column">
+            <!-- Orologio -->
+            <div class="clock-section">
+                <div class="clock-time" id="clock-time">00:00</div>
+                <div class="clock-date" id="clock-date">Lunedì 1 Gennaio</div>
+            </div>
+            
+            <!-- Meteo -->
+            <div class="weather-section">
+                <div class="weather-title">Meteo Padova</div>
+                <div class="weather-current">
+                    <div class="weather-temp" id="weather-temp">--°C</div>
+                    <div class="weather-desc" id="weather-desc">Caricamento...</div>
+                    <div class="weather-wind" id="weather-wind"></div>
+                    <div class="weather-rain" id="weather-rain"></div>
+                </div>
+                <div class="weather-forecast" id="weather-forecast">
+                    <div class="loading">Caricamento previsioni...</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Colonna Destra - Agenda -->
+        <div class="agenda-column">
+            <h1 class="agenda-title">Calendario</h1>
+            <ul class="events-list" id="events-list">
+                <!-- Eventi verranno inseriti via JavaScript -->
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // COMPATIBILITÀ ES5 - Solo var e function
+        // ============================================
+        
+        // Dati mock per gli eventi dell'agenda
+        var events = [
+            { time: "18:00", text: "Spesa settimanale" },
+            { time: "Domani 09:00", text: "Lavoro - Meeting progetto" },
+            { time: "Domani 14:30", text: "Visita medica" },
+            { time: "20:00", text: "Cena in famiglia" },
+            { time: "Dopo domani 10:00", text: "Palestra" }
+        ];
+        
+        // ============================================
+        // FUNZIONE OROLOGIO
+        // ============================================
+        function updateClock() {
+            var now = new Date();
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            
+            // Formatta ore e minuti con zero iniziale se necessario
+            var hoursStr = hours < 10 ? "0" + hours : hours.toString();
+            var minutesStr = minutes < 10 ? "0" + minutes : minutes.toString();
+            
+            // Aggiorna l'orologio
+            document.getElementById("clock-time").textContent = hoursStr + ":" + minutesStr;
+            
+            // Aggiorna la data
+            var days = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
+            var months = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", 
+                         "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
+            
+            var dayName = days[now.getDay()];
+            var day = now.getDate();
+            var month = months[now.getMonth()];
+            
+            document.getElementById("clock-date").textContent = dayName + " " + day + " " + month;
+        }
+        
+        // Aggiorna l'orologio ogni minuto (60000 ms)
+        updateClock();
+        setInterval(updateClock, 60000);
+        
+        // ============================================
+        // FUNZIONE METEO - XMLHttpRequest (ES5)
+        // ============================================
+        function loadWeather() {
+            // Endpoint OpenMeteo per Padova
+            // Include windspeed, precipitation_probability_max per tutti i giorni
+            var url = "https://api.open-meteo.com/v1/forecast?latitude=45.4064&longitude=11.8768&current_weather=true&daily=temperature_2m_max,weathercode,windspeed_10m_max,precipitation_probability_max&timezone=Europe%2FRome";
+            
+            // XMLHttpRequest invece di fetch (compatibilità ES5)
+            var xhr = new XMLHttpRequest();
+            
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        try {
+                            var data = JSON.parse(xhr.responseText);
+                            displayWeather(data);
+                        } catch (e) {
+                            showWeatherError("Errore nel parsing dei dati meteo");
+                        }
+                    } else {
+                        showWeatherError("Errore di connessione: " + xhr.status);
+                    }
+                }
+            };
+            
+            xhr.onerror = function() {
+                showWeatherError("Errore di rete");
+            };
+            
+            xhr.open("GET", url, true);
+            xhr.send();
+        }
+        
+        // Funzione per tradurre codici WMO in descrizioni italiane
+        function getWeatherDescription(code) {
+            // Codici WMO Weather Code
+            switch(code) {
+                case 0:
+                    return "Sereno";
+                case 1:
+                case 2:
+                case 3:
+                    return "Parzialmente nuvoloso";
+                case 45:
+                case 48:
+                    return "Nebbia";
+                case 51:
+                case 53:
+                case 55:
+                    return "Pioggerella";
+                case 56:
+                case 57:
+                    return "Pioggerella gelata";
+                case 61:
+                case 63:
+                case 65:
+                    return "Pioggia";
+                case 66:
+                case 67:
+                    return "Pioggia gelata";
+                case 71:
+                case 73:
+                case 75:
+                    return "Neve";
+                case 77:
+                    return "Granelli di neve";
+                case 80:
+                case 81:
+                case 82:
+                    return "Rovesci";
+                case 85:
+                case 86:
+                    return "Rovesci di neve";
+                case 95:
+                    return "Temporale";
+                case 96:
+                case 99:
+                    return "Temporale con grandine";
+                default:
+                    return "Condizioni sconosciute";
+            }
+        }
+        
+        // Funzione per formattare la data in italiano
+        function formatDate(dateString) {
+            var date = new Date(dateString);
+            var days = ["Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab"];
+            var months = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", 
+                         "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
+            
+            var dayName = days[date.getDay()];
+            var day = date.getDate();
+            var month = months[date.getMonth()];
+            
+            return dayName + " " + day + " " + month;
+        }
+        
+        // Funzione per visualizzare i dati meteo
+        function displayWeather(data) {
+            // Temperatura attuale
+            if (data.current_weather && data.current_weather.temperature !== undefined) {
+                var temp = Math.round(data.current_weather.temperature);
+                document.getElementById("weather-temp").textContent = temp + "°C";
+            }
+            
+            // Descrizione meteo attuale
+            if (data.current_weather && data.current_weather.weathercode !== undefined) {
+                var desc = getWeatherDescription(data.current_weather.weathercode);
+                document.getElementById("weather-desc").textContent = desc;
+            }
+            
+            // Velocità vento attuale
+            if (data.current_weather && data.current_weather.windspeed !== undefined) {
+                var windSpeed = Math.round(data.current_weather.windspeed);
+                document.getElementById("weather-wind").textContent = "Vento: " + windSpeed + " km/h";
+            } else {
+                document.getElementById("weather-wind").textContent = "";
+            }
+            
+            // Probabilità di pioggia oggi (dal primo giorno delle previsioni daily)
+            if (data.daily && data.daily.precipitation_probability_max && data.daily.precipitation_probability_max.length > 0) {
+                var rainProbToday = data.daily.precipitation_probability_max[0];
+                if (rainProbToday !== null && rainProbToday !== undefined) {
+                    document.getElementById("weather-rain").textContent = "Pioggia: " + Math.round(rainProbToday) + "%";
+                } else {
+                    document.getElementById("weather-rain").textContent = "";
+                }
+            } else {
+                document.getElementById("weather-rain").textContent = "";
+            }
+            
+            // Previsioni prossimi 3 giorni
+            var forecastHtml = "";
+            if (data.daily && data.daily.time && data.daily.temperature_2m_max) {
+                var forecastContainer = document.getElementById("weather-forecast");
+                forecastHtml = "";
+                
+                // Prendi i prossimi 3 giorni (escludendo oggi)
+                for (var i = 1; i <= 3 && i < data.daily.time.length; i++) {
+                    var dateStr = data.daily.time[i];
+                    var maxTemp = Math.round(data.daily.temperature_2m_max[i]);
+                    var formattedDate = formatDate(dateStr);
+                    
+                    // Velocità vento massima
+                    var windSpeed = "";
+                    if (data.daily.windspeed_10m_max && data.daily.windspeed_10m_max[i] !== null && data.daily.windspeed_10m_max[i] !== undefined) {
+                        windSpeed = " | Vento: " + Math.round(data.daily.windspeed_10m_max[i]) + " km/h";
+                    }
+                    
+                    // Probabilità di pioggia
+                    var rainProb = "";
+                    if (data.daily.precipitation_probability_max && data.daily.precipitation_probability_max[i] !== null && data.daily.precipitation_probability_max[i] !== undefined) {
+                        rainProb = " | Pioggia: " + Math.round(data.daily.precipitation_probability_max[i]) + "%";
+                    }
+                    
+                    forecastHtml += "<div class=\"forecast-item\">" + 
+                                   formattedDate + " - Max " + maxTemp + "°C" + windSpeed + rainProb + 
+                                   "</div>";
+                }
+                
+                forecastContainer.innerHTML = forecastHtml;
+            }
+        }
+        
+        // Funzione per mostrare errori meteo
+        function showWeatherError(message) {
+            document.getElementById("weather-temp").textContent = "--°C";
+            document.getElementById("weather-desc").textContent = message;
+            document.getElementById("weather-wind").textContent = "";
+            document.getElementById("weather-rain").textContent = "";
+            document.getElementById("weather-forecast").innerHTML = 
+                "<div class=\"error\">Impossibile caricare le previsioni</div>";
+        }
+        
+        // ============================================
+        // FUNZIONE AGENDA - Renderizza eventi mock
+        // ============================================
+        function renderEvents() {
+            var eventsList = document.getElementById("events-list");
+            var html = "";
+            
+            for (var i = 0; i < events.length; i++) {
+                var event = events[i];
+                html += "<li class=\"event-item\">" + 
+                       "<strong>" + event.time + "</strong> - " + event.text + 
+                       "</li>";
+            }
+            
+            eventsList.innerHTML = html;
+        }
+        
+        // ============================================
+        // INIZIALIZZAZIONE
+        // ============================================
+        // Carica meteo all'avvio
+        loadWeather();
+        
+        // Renderizza eventi
+        renderEvents();
+        
+        // Ricarica meteo ogni 30 minuti (1800000 ms)
+        setInterval(loadWeather, 1800000);
+    </script>
+</body>
+</html>
+
