@@ -150,6 +150,15 @@
             border-bottom: none;
         }
         
+        .evt-time {
+            font-weight: 500;
+            margin-right: 10px;
+        }
+        
+        .evt-text {
+            font-weight: 400;
+        }
+        
         /* Loading e Error states */
         .loading {
             font-size: 14px;
@@ -192,8 +201,8 @@
         <!-- Colonna Destra - Agenda -->
         <div class="agenda-column">
             <h1 class="agenda-title">Calendario</h1>
-            <ul class="events-list" id="events-list">
-                <!-- Eventi verranno inseriti via JavaScript -->
+            <ul class="events-list" id="agenda-list">
+                <li class="event-item">Caricamento calendario...</li>
             </ul>
         </div>
     </div>
@@ -203,14 +212,8 @@
         // COMPATIBILITÀ ES5 - Solo var e function
         // ============================================
         
-        // Dati mock per gli eventi dell'agenda
-        var events = [
-            { time: "18:00", text: "Spesa settimanale" },
-            { time: "Domani 09:00", text: "Lavoro - Meeting progetto" },
-            { time: "Domani 14:30", text: "Visita medica" },
-            { time: "20:00", text: "Cena in famiglia" },
-            { time: "Dopo domani 10:00", text: "Palestra" }
-        ];
+        // URL API Google Apps Script per il calendario
+        var CALENDAR_API_URL = "https://script.google.com/macros/s/AKfycbwJC4XH7DJYJCEbCpcBNMpHZQ_n_CS7iqVGkQHBBIe8/dev";
         
         // ============================================
         // FUNZIONE OROLOGIO
@@ -246,7 +249,7 @@
         // ============================================
         // FUNZIONE METEO - XMLHttpRequest (ES5)
         // ============================================
-        function loadWeather() {
+        function updateWeather() {
             // Endpoint OpenMeteo per Padova
             // Include windspeed, precipitation_probability_max per tutti i giorni
             var url = "https://api.open-meteo.com/v1/forecast?latitude=45.4064&longitude=11.8768&current_weather=true&daily=temperature_2m_max,weathercode,windspeed_10m_max,precipitation_probability_max&timezone=Europe%2FRome";
@@ -419,33 +422,170 @@
         }
         
         // ============================================
-        // FUNZIONE AGENDA - Renderizza eventi mock
+        // FUNZIONE CALENDARIO - XMLHttpRequest (ES5)
+        // Fallback a iframe se CORS fallisce
         // ============================================
-        function renderEvents() {
-            var eventsList = document.getElementById("events-list");
-            var html = "";
-            
-            for (var i = 0; i < events.length; i++) {
-                var event = events[i];
-                html += "<li class=\"event-item\">" + 
-                       "<strong>" + event.time + "</strong> - " + event.text + 
-                       "</li>";
+        
+        // Callback globale per JSONP (se implementato nello script)
+        window.calendarCallback = function(data) {
+            try {
+                var events = data;
+                var html = "";
+                if (!events || events.length === 0) {
+                    html = '<li class="event-item">Nessun evento imminente</li>';
+                } else {
+                    for (var i = 0; i < events.length; i++) {
+                        if (events[i] && events[i].time && events[i].text) {
+                            html += '<li class="event-item"><span class="evt-time">' + 
+                                   events[i].time + '</span><span class="evt-text">' + 
+                                   events[i].text + '</span></li>';
+                        }
+                    }
+                    if (html === "") {
+                        html = '<li class="event-item">Nessun evento valido</li>';
+                    }
+                }
+                document.getElementById("agenda-list").innerHTML = html;
+            } catch(e) {
+                document.getElementById("agenda-list").innerHTML = '<li class="event-item">Errore callback</li>';
+            }
+        };
+        
+        function updateCalendar() {
+            if (!CALENDAR_API_URL || CALENDAR_API_URL === "INSERISCI_QUI_IL_TUO_URL_APPS_SCRIPT") {
+                document.getElementById("agenda-list").innerHTML = '<li class="event-item">Configura CALENDAR_API_URL</li>';
+                return;
             }
             
-            eventsList.innerHTML = html;
+            // Mostra messaggio di caricamento
+            document.getElementById("agenda-list").innerHTML = '<li class="event-item">Caricamento calendario...</li>';
+            
+            var url = CALENDAR_API_URL;
+            var xhr = new XMLHttpRequest();
+            var requestCompleted = false;
+            var timeout = setTimeout(function() {
+                if (!requestCompleted && xhr.readyState !== 4) {
+                    requestCompleted = true;
+                    xhr.abort();
+                    // Fallback: prova con iframe
+                    tryIframeFallback();
+                }
+            }, 12000);
+            
+            xhr.open("GET", url, true);
+            
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && !requestCompleted) {
+                    requestCompleted = true;
+                    clearTimeout(timeout);
+                    
+                    var responseText = xhr.responseText || "";
+                    var responseLength = responseText.length;
+                    
+                    // Controlla se c'è una risposta valida (JSON array o object)
+                    var looksLikeJSON = responseLength > 0 && 
+                                       (responseText.indexOf('[') >= 0 || responseText.indexOf('{') >= 0);
+                    
+                    // Su browser vecchi, status 0 può significare successo
+                    // Prova a processare se c'è una risposta che sembra JSON
+                    if (xhr.status === 200 || (xhr.status === 0 && looksLikeJSON && responseLength > 2)) {
+                        try {
+                            // Rimuovi prefissi di sicurezza Google
+                            if (responseText.indexOf(')') === 0) {
+                                var semicolonPos = responseText.indexOf(';');
+                                if (semicolonPos > 0) {
+                                    responseText = responseText.substring(semicolonPos + 1);
+                                }
+                            }
+                            responseText = responseText.replace(/^\)\]\}\'\n?/, '').trim();
+                            
+                            if (!responseText || responseText.length === 0) {
+                                document.getElementById("agenda-list").innerHTML = '<li class="event-item">Risposta vuota</li>';
+                                return;
+                            }
+                            
+                            var events = JSON.parse(responseText);
+                            renderCalendarEvents(events);
+                        } catch(e) {
+                            // Se il parsing fallisce ma c'è una risposta, mostra messaggio più utile
+                            if (responseLength > 0) {
+                                document.getElementById("agenda-list").innerHTML = '<li class="event-item">Formato non valido</li>';
+                            } else {
+                                tryIframeFallback();
+                            }
+                        }
+                    } else if (xhr.status === 0) {
+                        // Status 0 senza risposta valida = CORS bloccato
+                        tryIframeFallback();
+                    } else {
+                        document.getElementById("agenda-list").innerHTML = '<li class="event-item">HTTP ' + xhr.status + '</li>';
+                    }
+                }
+            };
+            
+            xhr.onerror = function() {
+                if (!requestCompleted) {
+                    requestCompleted = true;
+                    clearTimeout(timeout);
+                    tryIframeFallback();
+                }
+            };
+            
+            try {
+                xhr.send(null);
+            } catch(e) {
+                if (!requestCompleted) {
+                    requestCompleted = true;
+                    clearTimeout(timeout);
+                    tryIframeFallback();
+                }
+            }
+        }
+        
+        // Funzione helper per renderizzare eventi
+        function renderCalendarEvents(events) {
+            var html = "";
+            if (!events || events.length === 0) {
+                html = '<li class="event-item">Nessun evento imminente</li>';
+            } else {
+                for (var i = 0; i < events.length; i++) {
+                    if (events[i] && events[i].time && events[i].text) {
+                        html += '<li class="event-item"><span class="evt-time">' + 
+                               events[i].time + '</span><span class="evt-text">' + 
+                               events[i].text + '</span></li>';
+                    }
+                }
+                if (html === "") {
+                    html = '<li class="event-item">Nessun evento valido</li>';
+                }
+            }
+            document.getElementById("agenda-list").innerHTML = html;
+        }
+        
+        // Fallback con iframe (limitato ma può funzionare)
+        function tryIframeFallback() {
+            // Messaggio più dettagliato per aiutare il debug
+            var html = '<li class="event-item">Errore CORS</li>';
+            html += '<li class="event-item">Verifica:</li>';
+            html += '<li class="event-item">1. Script pubblicato</li>';
+            html += '<li class="event-item">2. "Chiunque, anche anonimo"</li>';
+            html += '<li class="event-item">3. Funzione doGet() presente</li>';
+            document.getElementById("agenda-list").innerHTML = html;
         }
         
         // ============================================
         // INIZIALIZZAZIONE
         // ============================================
         // Carica meteo all'avvio
-        loadWeather();
+        updateWeather();
         
-        // Renderizza eventi
-        renderEvents();
+        // Carica calendario all'avvio
+        updateCalendar();
         
-        // Ricarica meteo ogni 30 minuti (1800000 ms)
-        setInterval(loadWeather, 1800000);
+        // Refresh automatici
+        setInterval(updateWeather, 1000 * 60 * 30); // 30 min
+        setInterval(updateCalendar, 1000 * 60 * 60); // 1 ora
+        setInterval(function(){ location.reload(); }, 1000 * 60 * 60 * 2); // 2 ore hard refresh
     </script>
 </body>
 </html>
