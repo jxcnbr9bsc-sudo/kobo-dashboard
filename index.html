@@ -19,14 +19,14 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            overflow: hidden; /* Fondamentale per nascondere le scrollbar */
-            background-color: #000; /* Assicura sfondo nero ovunque */
+            overflow: hidden;
+            background-color: #000000;
         }
         
         body {
             font-family: 'DM Sans', sans-serif;
-            background-color: #FFFFFF;
-            color: #000000;
+            background-color: #000000;
+            color: #FFFFFF;
             position: relative;
             letter-spacing: -0.05em;
         }
@@ -36,29 +36,46 @@
             color: #FFFFFF;
         }
         
-        /* IL CONTAINER "GHOST" (La correzione geometrica) */
+        /* CONTAINER PRINCIPALE - Compatibilità WebKit vecchio */
         #app-container {
-            /* Scambiamo le dimensioni: Larghezza = Altezza Kobo, Altezza = Larghezza Kobo */
+            /* Dimensioni FISSE invertite */
             width: 805px;
             height: 724px;
             
-            /* Posizionamento assoluto in alto a sinistra */
-            position: absolute;
-            top: 0;
-            left: 0;
+            /* Posizionamento centrato */
+            position: fixed;
+            top: 50%;
+            left: 50%;
             
-            /* LA MAGIA DELLA ROTAZIONE */
-            transform-origin: top left; /* Perno in alto a sinistra */
-            transform: rotate(90deg) translateY(-100%);
-            /* Spiegazione: Ruota di 90° e poi "tira indietro" il box verso l'alto della sua stessa altezza */
+            /* ROTAZIONE CON VENDOR PREFIXES (Fondamentale per WebKit vecchio) */
+            -webkit-transform-origin: center center;
+            -moz-transform-origin: center center;
+            transform-origin: center center;
+            
+            -webkit-transform: translate(-50%, -50%) rotate(90deg);
+            -moz-transform: translate(-50%, -50%) rotate(90deg);
+            transform: translate(-50%, -50%) rotate(90deg);
+            
+            /* Stile */
+            background-color: #000000;
+            color: #FFFFFF;
+            z-index: 100;
             
             display: grid;
             grid-template-columns: 35% 65%;
-            border: 2px solid red; /* DEBUG VISIVO - temporaneo */
+            border: 2px solid #FFFFFF;
         }
         
-        body.dark-mode #app-container {
-            border-color: #FFFFFF;
+        /* Indicatore versione */
+        .version-indicator {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 10px;
+            font-weight: 400;
+            color: #FFFFFF;
+            opacity: 0.6;
+            z-index: 101;
         }
         
         /* Colonna Sinistra */
@@ -227,6 +244,9 @@
 </head>
 <body>
     <div id="app-container">
+        <!-- Indicatore versione -->
+        <div class="version-indicator">v3-WEBKIT</div>
+        
         <!-- Colonna Sinistra -->
         <div class="left-column">
             <div class="clock-time" id="clock-time">00:00</div>
