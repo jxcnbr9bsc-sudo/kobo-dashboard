@@ -154,6 +154,19 @@
             font-weight: 400;
             color: #000000;
         }
+        
+        /* Risoluzione display */
+        .resolution-display {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            background-color: #000000;
+            color: #FFFFFF;
+            padding: 5px;
+            z-index: 9999;
+            font-size: 12px;
+            font-family: 'DM Sans', sans-serif;
+        }
     </style>
 </head>
 <body>
@@ -188,6 +201,9 @@
             </div>
         </div>
     </div>
+    
+    <!-- Display Risoluzione -->
+    <div class="resolution-display" id="resolution-display">RES: 0 x 0</div>
 
     <script>
         // ============================================
@@ -397,6 +413,19 @@
             document.getElementById("weather-forecast").innerHTML = 
                 "<div class=\"error\">Impossibile caricare le previsioni</div>";
         }
+        
+        // ============================================
+        // FUNZIONE RISOLUZIONE DISPLAY
+        // ============================================
+        function updateResolution() {
+            var width = window.innerWidth;
+            var height = window.innerHeight;
+            document.getElementById("resolution-display").textContent = "RES: " + width + " x " + height;
+        }
+        
+        // Aggiorna risoluzione all'avvio e al resize
+        updateResolution();
+        window.addEventListener("resize", updateResolution);
         
         // ============================================
         // INIZIALIZZAZIONE
