@@ -47,22 +47,20 @@
             top: 50%;
             left: 50%;
             
-            /* ROTAZIONE CON VENDOR PREFIXES (Fondamentale per WebKit vecchio) */
+            /* ROTAZIONE INVERSA CON VENDOR PREFIXES (Fondamentale per WebKit vecchio) */
             -webkit-transform-origin: center center;
             -moz-transform-origin: center center;
             transform-origin: center center;
             
-            -webkit-transform: translate(-50%, -50%) rotate(90deg);
-            -moz-transform: translate(-50%, -50%) rotate(90deg);
-            transform: translate(-50%, -50%) rotate(90deg);
+            -webkit-transform: translate(-50%, -50%) rotate(-90deg);
+            -moz-transform: translate(-50%, -50%) rotate(-90deg);
+            transform: translate(-50%, -50%) rotate(-90deg);
             
             /* Stile */
             background-color: #000000;
             color: #FFFFFF;
             z-index: 100;
-            
-            display: grid;
-            grid-template-columns: 35% 65%;
+            overflow: hidden; /* Per contenere i float */
             border: 2px solid #FFFFFF;
         }
         
@@ -78,16 +76,21 @@
             z-index: 101;
         }
         
-        /* Colonna Sinistra */
-        .left-column {
-            display: flex;
-            flex-direction: column;
-            padding: 20px; /* Ridotto padding per evitare che tocchi i bordi */
-            border-right: 2px solid #000000;
+        /* Colonne con FLOAT (compatibilità browser vecchio) */
+        .col-left {
+            width: 35%;
+            float: left;
+            height: 100%;
+            border-right: 2px solid #FFFFFF;
+            box-sizing: border-box;
+            padding: 20px;
         }
         
-        body.dark-mode .left-column {
-            border-right-color: #FFFFFF;
+        .col-right {
+            width: 65%;
+            float: left;
+            height: 100%;
+            box-sizing: border-box;
         }
         
         /* Orologio */
@@ -130,38 +133,29 @@
             margin-bottom: 2px;
         }
         
-        /* Colonna Destra - Widget Grid */
-        .right-column {
-            display: grid;
-            grid-template-rows: 1fr 1fr;
-            grid-template-columns: 1fr 1fr;
-            gap: 0;
-        }
-        
+        /* Widget con FLOAT (compatibilità browser vecchio) */
         .widget {
-            border: 1px solid #000000;
-            padding: 20px; /* Padding ridotto per adattarsi meglio */
-            display: flex;
-            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+            border: 1px solid #FFFFFF;
         }
         
-        body.dark-mode .widget {
-            border-color: #FFFFFF;
+        .widget-full {
+            width: 100%;
+            height: 50%;
+            float: left;
+            border-bottom: 2px solid #FFFFFF;
         }
         
-        .widget-air {
-            grid-column: 1 / 3;
-            grid-row: 1;
+        .widget-half {
+            width: 50%;
+            height: 50%;
+            float: left;
+            border-right: 2px solid #FFFFFF;
         }
         
-        .widget-sun {
-            grid-column: 1;
-            grid-row: 2;
-        }
-        
-        .widget-moon {
-            grid-column: 2;
-            grid-row: 2;
+        .widget-half:last-child {
+            border-right: none;
         }
         
         .widget-title {
@@ -173,10 +167,8 @@
         }
         
         .widget-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            height: 100%;
+            padding-top: 10px;
         }
         
         /* Widget Aria */
@@ -245,10 +237,10 @@
 <body>
     <div id="app-container">
         <!-- Indicatore versione -->
-        <div class="version-indicator">v3-WEBKIT</div>
+        <div class="version-indicator">v4-FLOAT-fix</div>
         
         <!-- Colonna Sinistra -->
-        <div class="left-column">
+        <div class="col-left">
             <div class="clock-time" id="clock-time">00:00</div>
             <div class="clock-date" id="clock-date">Lunedì 1 Gennaio</div>
             
@@ -261,21 +253,21 @@
         </div>
         
         <!-- Colonna Destra - Widget -->
-        <div class="right-column">
+        <div class="col-right">
             <!-- Widget Aria -->
-            <div class="widget widget-air">
+            <div class="widget widget-full widget-air">
                 <div class="widget-title">Aria</div>
                 <div class="widget-content">
                     <div class="air-value" id="air-value">--</div>
                     <div class="air-judgment" id="air-judgment">Caricamento...</div>
                     <svg class="air-sparkline" id="air-sparkline" viewBox="0 0 300 40" preserveAspectRatio="none">
-                        <polyline id="air-line" fill="none" stroke="#000000" stroke-width="2"/>
+                        <polyline id="air-line" fill="none" stroke="#FFFFFF" stroke-width="2"/>
                     </svg>
                 </div>
             </div>
             
             <!-- Widget Sole -->
-            <div class="widget widget-sun">
+            <div class="widget widget-half widget-sun">
                 <div class="widget-title">Sole</div>
                 <div class="widget-content">
                     <div class="sun-times">
@@ -304,7 +296,7 @@
             </div>
             
             <!-- Widget Luna -->
-            <div class="widget widget-moon">
+            <div class="widget widget-half widget-moon">
                 <div class="widget-title">Luna</div>
                 <div class="widget-content">
                     <div class="moon-phase">
