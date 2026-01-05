@@ -13,15 +13,20 @@
             box-sizing: border-box;
         }
         
+        /* RESET BODY */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Fondamentale per nascondere le scrollbar */
+            background-color: #000; /* Assicura sfondo nero ovunque */
+        }
+        
         body {
             font-family: 'DM Sans', sans-serif;
             background-color: #FFFFFF;
             color: #000000;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            width: 724px;
-            height: 805px;
             position: relative;
             letter-spacing: -0.05em;
         }
@@ -31,17 +36,25 @@
             color: #FFFFFF;
         }
         
+        /* IL CONTAINER "GHOST" (La correzione geometrica) */
         #app-container {
+            /* Scambiamo le dimensioni: Larghezza = Altezza Kobo, Altezza = Larghezza Kobo */
             width: 805px;
             height: 724px;
-            transform: rotate(90deg);
-            transform-origin: bottom left;
+            
+            /* Posizionamento assoluto in alto a sinistra */
             position: absolute;
-            top: -805px;
+            top: 0;
             left: 0;
+            
+            /* LA MAGIA DELLA ROTAZIONE */
+            transform-origin: top left; /* Perno in alto a sinistra */
+            transform: rotate(90deg) translateY(-100%);
+            /* Spiegazione: Ruota di 90° e poi "tira indietro" il box verso l'alto della sua stessa altezza */
+            
             display: grid;
             grid-template-columns: 35% 65%;
-            border: 2px solid #000000;
+            border: 2px solid red; /* DEBUG VISIVO - temporaneo */
         }
         
         body.dark-mode #app-container {
@@ -52,7 +65,7 @@
         .left-column {
             display: flex;
             flex-direction: column;
-            padding: 30px;
+            padding: 20px; /* Ridotto padding per evitare che tocchi i bordi */
             border-right: 2px solid #000000;
         }
         
@@ -110,7 +123,7 @@
         
         .widget {
             border: 1px solid #000000;
-            padding: 20px;
+            padding: 20px; /* Padding ridotto per adattarsi meglio */
             display: flex;
             flex-direction: column;
         }
