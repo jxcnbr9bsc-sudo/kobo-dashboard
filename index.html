@@ -77,10 +77,11 @@
             padding: 8px 0;
             margin-bottom: 12px;
             overflow: hidden;
+            text-align: center;
         }
         
         .clock-time {
-            font-size: 56px;
+            font-size: 62px;
             font-weight: 700;
             line-height: 1;
             float: left;
@@ -88,12 +89,12 @@
         }
         
         .clock-date {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 400;
             text-transform: uppercase;
             letter-spacing: -0.02em;
             float: left;
-            padding-top: 20px;
+            padding-top: 22px;
         }
         
         /* Riga Principale - Temp + Meteo Info Orizzontale */
@@ -119,14 +120,14 @@
         }
         
         .weather-temp {
-            font-size: 72px;
+            font-size: 79px;
             font-weight: 700;
             line-height: 1;
             margin-bottom: 5px;
         }
         
         .weather-desc {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 400;
             margin-bottom: 3px;
         }
@@ -137,19 +138,21 @@
             float: left;
             margin-left: 2%;
             overflow: hidden;
+            text-align: center;
         }
         
         .weather-wind,
         .weather-rain {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 400;
             margin-bottom: 8px;
-            padding: 8px;
+            padding: 10px;
             border: 2px solid #FFFFFF;
             -webkit-border-radius: 10px;
             -moz-border-radius: 10px;
             border-radius: 10px;
             box-sizing: border-box;
+            text-align: center;
         }
         
         /* Riga Aria + Previsioni Orizzontale */
@@ -171,34 +174,38 @@
             padding: 12px;
             box-sizing: border-box;
             overflow: hidden;
+            text-align: center;
         }
         
         .air-header {
             width: 100%;
             margin-bottom: 8px;
             overflow: hidden;
+            text-align: center;
         }
         
         .air-title {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: -0.02em;
-            float: left;
+            display: block;
+            margin-bottom: 5px;
         }
         
         .air-value {
-            font-size: 42px;
+            font-size: 46px;
             font-weight: 700;
-            float: right;
             line-height: 1;
+            display: block;
+            margin-bottom: 5px;
         }
         
         .air-judgment {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 400;
-            clear: both;
             margin-bottom: 8px;
+            text-align: center;
         }
         
         .air-sparkline {
@@ -220,14 +227,16 @@
             padding: 12px;
             box-sizing: border-box;
             overflow: hidden;
+            text-align: center;
         }
         
         .forecast-title {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: -0.02em;
             margin-bottom: 10px;
+            text-align: center;
         }
         
         .forecast-days-list {
@@ -247,20 +256,20 @@
         }
         
         .forecast-day-name {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 500;
             margin-bottom: 5px;
         }
         
         .forecast-day-icon {
-            width: 28px;
-            height: 28px;
+            width: 30px;
+            height: 30px;
             display: inline-block;
             margin: 5px 0;
         }
         
         .forecast-day-temp {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 400;
         }
         
@@ -292,35 +301,40 @@
         }
         
         .metric-title {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: -0.02em;
             margin-bottom: 10px;
+            text-align: center;
         }
         
         .metric-value {
-            font-size: 32px;
+            font-size: 35px;
             font-weight: 700;
             margin-bottom: 8px;
             line-height: 1;
+            text-align: center;
         }
         
         .metric-label {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 400;
+            text-align: center;
         }
         
         .metric-sun-times {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 500;
             margin-top: 5px;
+            text-align: center;
         }
         
         .metric-sun-label {
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 400;
             margin-top: 3px;
+            text-align: center;
         }
         
         /* Sun/Moon Panel Orizzontale */
@@ -362,17 +376,19 @@
         }
         
         .sunrise-time, .sunset-time {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 500;
             margin: 3px 0;
             display: block;
+            text-align: center;
         }
         
         .moon-phase-name {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 400;
             text-transform: uppercase;
             letter-spacing: -0.02em;
+            text-align: center;
         }
         
         /* Utility */
@@ -386,7 +402,7 @@
 <body>
     <div id="app-container">
         <!-- Indicatore versione -->
-        <div class="version-indicator">v6-HORIZONTAL</div>
+        <div class="version-indicator">v7-CENTERED</div>
         
         <!-- Top Bar -->
         <div class="top-bar clearfix">
