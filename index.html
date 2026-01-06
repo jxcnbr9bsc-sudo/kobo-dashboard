@@ -72,16 +72,16 @@
         /* Top Bar - Orologio e Data Orizzontale */
         .top-bar {
             width: 100%;
-            height: 70px;
+            height: 100px;
             border-bottom: 2px solid #FFFFFF;
-            padding: 8px 0;
+            padding: 10px 0;
             margin-bottom: 12px;
             overflow: hidden;
             text-align: center;
         }
         
         .clock-time {
-            font-size: 62px;
+            font-size: 85px;
             font-weight: 700;
             line-height: 1;
             float: left;
@@ -89,12 +89,12 @@
         }
         
         .clock-date {
-            font-size: 22px;
+            font-size: 30px;
             font-weight: 400;
             text-transform: uppercase;
             letter-spacing: -0.02em;
             float: left;
-            padding-top: 22px;
+            padding-top: 30px;
         }
         
         /* Riga Principale - Temp + Meteo Info Orizzontale */
@@ -164,14 +164,14 @@
         }
         
         .weather-temp {
-            font-size: 79px;
+            font-size: 91px;
             font-weight: 700;
             line-height: 1;
             margin-bottom: 8px;
         }
         
         .weather-desc {
-            font-size: 20px;
+            font-size: 23px;
             font-weight: 400;
             margin-bottom: 5px;
         }
@@ -186,7 +186,7 @@
         
         .weather-wind,
         .weather-rain {
-            font-size: 20px;
+            font-size: 23px;
             font-weight: 400;
             margin-bottom: 10px;
             padding: 12px 15px;
@@ -291,7 +291,7 @@
         }
         
         .forecast-title {
-            font-size: 18px;
+            font-size: 21px;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: -0.02em;
@@ -316,22 +316,22 @@
         }
         
         .forecast-day-name {
-            font-size: 15px;
+            font-size: 17px;
             font-weight: 500;
             margin-bottom: 5px;
             display: block;
         }
         
         .forecast-day-icon {
-            width: 28px;
-            height: 28px;
+            width: 32px;
+            height: 32px;
             display: inline-block;
             vertical-align: middle;
             margin-right: 8px;
         }
         
         .forecast-day-temp {
-            font-size: 18px;
+            font-size: 21px;
             font-weight: 400;
             display: inline-block;
             vertical-align: middle;
@@ -377,7 +377,7 @@
         }
         
         .metric-title {
-            font-size: 15px;
+            font-size: 17px;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: -0.02em;
@@ -386,7 +386,7 @@
         }
         
         .metric-value {
-            font-size: 35px;
+            font-size: 40px;
             font-weight: 700;
             margin-bottom: 8px;
             line-height: 1;
@@ -394,92 +394,25 @@
         }
         
         .metric-label {
-            font-size: 18px;
+            font-size: 21px;
             font-weight: 400;
             text-align: center;
         }
         
         .metric-sun-times {
-            font-size: 22px;
+            font-size: 25px;
             font-weight: 500;
             margin-top: 5px;
             text-align: center;
         }
         
         .metric-sun-label {
-            font-size: 13px;
+            font-size: 15px;
             font-weight: 400;
             margin-top: 3px;
             text-align: center;
         }
         
-        /* Sun/Moon Panel Orizzontale */
-        .sun-moon-panel {
-            width: 100%;
-            height: 100px;
-            border: 2px solid #FFFFFF;
-            -webkit-border-radius: 15px;
-            -moz-border-radius: 15px;
-            border-radius: 15px;
-            box-sizing: border-box;
-            overflow: hidden;
-        }
-        
-        .sun-moon-content {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            padding: 15px;
-            box-sizing: border-box;
-        }
-        
-        .sun-item, .moon-item {
-            width: 48%;
-            float: left;
-            padding: 0 15px;
-            box-sizing: border-box;
-        }
-        
-        .sun-item {
-            margin-right: 2%;
-            border-right: 2px solid #FFFFFF;
-        }
-        
-        .sun-item-content,
-        .moon-item-content {
-            display: inline-block;
-            vertical-align: middle;
-        }
-        
-        .sun-icon, .moon-icon {
-            width: 36px;
-            height: 36px;
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 12px;
-        }
-        
-        .sun-times-group {
-            display: inline-block;
-            vertical-align: middle;
-        }
-        
-        .sunrise-time, .sunset-time {
-            font-size: 20px;
-            font-weight: 500;
-            margin: 2px 0;
-            display: block;
-            text-align: left;
-        }
-        
-        .moon-phase-name {
-            font-size: 18px;
-            font-weight: 400;
-            text-transform: uppercase;
-            letter-spacing: -0.02em;
-            display: inline-block;
-            vertical-align: middle;
-        }
         
         /* Utility */
         .clearfix:after {
@@ -492,7 +425,7 @@
 <body>
     <div id="app-container">
         <!-- Indicatore versione -->
-        <div class="version-indicator">v8-ADAPTIVE-LAYOUT</div>
+        <div class="version-indicator">v9-CLEANED</div>
         
         <!-- Top Bar -->
         <div class="top-bar clearfix">
@@ -601,38 +534,6 @@
             </div>
         </div>
         
-        <!-- Sun/Moon Panel -->
-        <div class="sun-moon-panel">
-            <div class="sun-moon-content clearfix">
-                <div class="sun-item">
-                    <div class="sun-item-content">
-                        <svg class="sun-icon" viewBox="0 0 24 24" fill="currentColor">
-                            <circle cx="12" cy="12" r="5"/>
-                            <line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" stroke-width="2"/>
-                            <line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" stroke-width="2"/>
-                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" stroke-width="2"/>
-                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2"/>
-                            <line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" stroke-width="2"/>
-                            <line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" stroke-width="2"/>
-                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor" stroke-width="2"/>
-                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor" stroke-width="2"/>
-                        </svg>
-                        <div class="sun-times-group">
-                            <div class="sunrise-time" id="sunrise-time">--:--</div>
-                            <div class="sunset-time" id="sunset-time">--:--</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="moon-item">
-                    <div class="moon-item-content">
-                        <svg class="moon-icon" id="moon-icon-bottom" viewBox="0 0 100 100">
-                            <circle cx="50" cy="50" r="45" fill="currentColor"/>
-                        </svg>
-                        <span class="moon-phase-name" id="moon-phase-name-bottom">Caricamento...</span>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <script>
@@ -854,7 +755,6 @@
                 var hours = sunrise.getHours();
                 var minutes = sunrise.getMinutes();
                 var sunriseStr = (hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes;
-                document.getElementById("sunrise-time").textContent = sunriseStr;
                 document.getElementById("sunrise-value").textContent = sunriseStr;
             }
             
@@ -863,7 +763,6 @@
                 var hours = sunset.getHours();
                 var minutes = sunset.getMinutes();
                 var sunsetStr = (hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes;
-                document.getElementById("sunset-time").textContent = sunsetStr;
                 document.getElementById("sunset-value").textContent = sunsetStr;
             }
         }
@@ -907,10 +806,8 @@
             var phase = calculateMoonPhase(now);
             
             document.getElementById("moon-phase-name").textContent = phase.name;
-            document.getElementById("moon-phase-name-bottom").textContent = phase.name;
             
             var moonSvg = document.getElementById("moon-icon");
-            var moonSvgBottom = document.getElementById("moon-icon-bottom");
             var illumination = phase.illumination;
             
             // Crea SVG della luna basato sulla fase
@@ -930,7 +827,6 @@
             }
             
             moonSvg.innerHTML = svgContent;
-            moonSvgBottom.innerHTML = svgContent;
         }
         
         // ============================================
