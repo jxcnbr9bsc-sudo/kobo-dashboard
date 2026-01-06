@@ -75,7 +75,7 @@
             height: 100px;
             border-bottom: 2px solid #FFFFFF;
             padding: 10px 0;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             overflow: hidden;
             text-align: center;
         }
@@ -101,8 +101,8 @@
         .main-row {
             width: 100%;
             height: 140px;
-            margin-bottom: 12px;
-            overflow: hidden;
+            margin-bottom: 15px;
+            overflow: visible;
         }
         
         /* Layout Orizzontale (più largo che alto) */
@@ -161,6 +161,7 @@
             border-radius: 15px;
             box-sizing: border-box;
             overflow: hidden;
+            position: relative;
         }
         
         .weather-temp {
@@ -210,8 +211,8 @@
         .middle-row {
             width: 100%;
             height: 140px;
-            margin-bottom: 12px;
-            overflow: hidden;
+            margin-bottom: 15px;
+            overflow: visible;
         }
         
         .air-panel {
@@ -224,6 +225,7 @@
             border-radius: 15px;
             box-sizing: border-box;
             overflow: hidden;
+            position: relative;
         }
         
         .air-content {
@@ -267,8 +269,10 @@
         .air-sparkline {
             width: 100%;
             max-width: 100%;
-            height: 35px;
-            overflow: hidden;
+            height: 40px;
+            overflow: visible;
+            padding: 8px 0;
+            box-sizing: border-box;
         }
         
         .forecast-section {
@@ -295,7 +299,7 @@
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: -0.02em;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             text-align: left;
         }
         
@@ -341,8 +345,8 @@
         .metrics-row {
             width: 100%;
             height: 180px;
-            margin-bottom: 12px;
-            overflow: hidden;
+            margin-bottom: 15px;
+            overflow: visible;
         }
         
         .metric-panel {
@@ -425,7 +429,7 @@
 <body>
     <div id="app-container">
         <!-- Indicatore versione -->
-        <div class="version-indicator">v9-CLEANED</div>
+        <div class="version-indicator">v10-FIXED-BORDERS</div>
         
         <!-- Top Bar -->
         <div class="top-bar clearfix">
@@ -470,7 +474,7 @@
                         <span class="air-value" id="air-value">--</span>
                     </div>
                     <div class="air-judgment" id="air-judgment">Caricamento...</div>
-                    <svg class="air-sparkline" id="air-sparkline" viewBox="0 0 300 35" preserveAspectRatio="none">
+                    <svg class="air-sparkline" id="air-sparkline" viewBox="0 0 300 40" preserveAspectRatio="none">
                         <polyline id="air-line" fill="none" stroke="#FFFFFF" stroke-width="2"/>
                     </svg>
                 </div>
@@ -734,10 +738,17 @@
                     var minVal = Math.min.apply(null, last24);
                     var range = maxVal - minVal || 1;
                     
+                    // Margini: 6px in alto e 6px in basso (su viewBox 40px, area utile 28px)
+                    var topMargin = 6;
+                    var bottomMargin = 6;
+                    var usableHeight = 40 - topMargin - bottomMargin;
+                    
                     var points = [];
                     for (var i = 0; i < last24.length; i++) {
                         var x = (i / (last24.length - 1)) * 300;
-                        var y = 30 - ((last24[i] - minVal) / range) * 25;
+                        // Inverti Y: valore minimo va in basso (40 - bottomMargin), valore massimo va in alto (topMargin)
+                        var normalizedValue = (last24[i] - minVal) / range;
+                        var y = 40 - bottomMargin - (normalizedValue * usableHeight);
                         points.push(x + "," + y);
                     }
                     
