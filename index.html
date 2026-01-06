@@ -104,9 +104,9 @@
         /* Riga Principale - Temp + Meteo Info Orizzontale */
         .main-row {
             width: 100%;
-            height: 140px;
+            height: 160px;
             margin-bottom: 15px;
-            overflow: visible;
+            overflow: hidden;
         }
         
         .temp-section {
@@ -150,23 +150,30 @@
             height: 100%;
             float: left;
             margin-left: 2%;
-            overflow: hidden;
+            overflow: visible;
             text-align: center;
             box-sizing: border-box;
+            padding: 5px 0;
         }
         
         .weather-wind,
         .weather-rain {
             font-size: 23px;
             font-weight: 400;
-            margin-bottom: 10px;
-            padding: 12px 15px;
+            margin-bottom: 8px;
+            padding: 10px 12px;
             border: 2px solid #FFFFFF;
             -webkit-border-radius: 10px;
             -moz-border-radius: 10px;
             border-radius: 10px;
             box-sizing: border-box;
             text-align: left;
+            display: block;
+            width: 100%;
+        }
+        
+        .weather-rain {
+            margin-bottom: 0;
         }
         
         .weather-wind-title,
