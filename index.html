@@ -104,16 +104,16 @@
         }
         
         .clock-date {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 400;
             text-transform: uppercase;
             letter-spacing: -0.02em;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
         
         /* Meteo */
         .weather-section {
-            font-size: 16px;
+            font-size: 18px;
         }
         
         .weather-temp {
@@ -123,16 +123,60 @@
         }
         
         .weather-desc {
-            font-size: 14px;
+            font-size: 18px;
             font-weight: 400;
             margin-bottom: 4px;
         }
         
         .weather-wind,
         .weather-rain {
-            font-size: 12px;
+            font-size: 16px;
             font-weight: 400;
             margin-bottom: 2px;
+        }
+        
+        /* Prossimi Giorni */
+        .forecast-days {
+            margin-top: 30px;
+        }
+        
+        .forecast-days-title {
+            font-size: 16px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            margin-bottom: 15px;
+        }
+        
+        .forecast-day {
+            display: block;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+        
+        .forecast-day-content {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        
+        .forecast-day-name {
+            display: inline-block;
+            width: 35px;
+            font-weight: 500;
+            margin-right: 10px;
+        }
+        
+        .forecast-day-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        
+        .forecast-day-temp {
+            display: inline-block;
+            font-weight: 400;
         }
         
         /* Widget con FLOAT (compatibilità browser vecchio) */
@@ -229,7 +273,7 @@
             width: 50px;
             height: 50px;
             display: inline-block;
-            margin-bottom: 10px;
+            margin: 0 auto 10px auto;
         }
         
         .moon-phase-name {
@@ -256,6 +300,11 @@
                 <div class="weather-desc" id="weather-desc">Caricamento...</div>
                 <div class="weather-wind" id="weather-wind"></div>
                 <div class="weather-rain" id="weather-rain"></div>
+            </div>
+            
+            <div class="forecast-days">
+                <div class="forecast-days-title">Prossimi Giorni</div>
+                <div id="forecast-days-list"></div>
             </div>
         </div>
         
@@ -322,7 +371,9 @@
         // COMPATIBILITÀ ES5 - Solo var e function
         // ============================================
         
-        var OPENMETEO_URL = "https://api.open-meteo.com/v1/forecast?latitude=45.4064&longitude=11.8768&current_weather=true&daily=temperature_2m_max,weathercode,windspeed_10m_max,precipitation_probability_max,sunrise,sunset&hourly=pm2_5&timezone=Europe%2FRome&forecast_days=1";
+        var OPENMETEO_URL = "https://api.open-meteo.com/v1/forecast?latitude=45.4064&longitude=11.8768&current_weather=true&daily=temperature_2m_max,temperature_2m_min,weathercode,windspeed_10m_max,precipitation_probability_max,sunrise,sunset&timezone=Europe%2FRome&forecast_days=4";
+        
+        var AIR_QUALITY_URL = "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=45.4064&longitude=11.8768&hourly=european_aqi&timezone=Europe%2FRome&forecast_days=1";
         
         // ============================================
         // FUNZIONE OROLOGIO
@@ -397,17 +448,39 @@
                     try {
                         var data = JSON.parse(xhr.responseText);
                         updateWeather(data);
-                        updateAirQuality(data);
                         updateSunTimes(data);
+                        updateForecastDays(data);
                         checkDarkMode(data);
                     } catch(e) {
-                        console.error("Errore parsing dati");
+                        console.error("Errore parsing dati meteo");
                     }
                 }
             };
             
             xhr.onerror = function() {
-                console.error("Errore di rete");
+                console.error("Errore di rete meteo");
+            };
+            
+            xhr.send();
+        }
+        
+        function loadAirQualityData() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", AIR_QUALITY_URL, true);
+            
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    try {
+                        var data = JSON.parse(xhr.responseText);
+                        updateAirQuality(data);
+                    } catch(e) {
+                        console.error("Errore parsing dati qualità aria");
+                    }
+                }
+            };
+            
+            xhr.onerror = function() {
+                console.error("Errore di rete qualità aria");
             };
             
             xhr.send();
@@ -441,25 +514,27 @@
         // WIDGET ARIA
         // ============================================
         function updateAirQuality(data) {
-            if (data.hourly && data.hourly.pm2_5 && data.hourly.pm2_5.length > 0) {
-                var currentPM25 = Math.round(data.hourly.pm2_5[data.hourly.pm2_5.length - 1]);
-                document.getElementById("air-value").textContent = currentPM25;
+            if (data.hourly && data.hourly.european_aqi && data.hourly.european_aqi.length > 0) {
+                var currentAQI = Math.round(data.hourly.european_aqi[data.hourly.european_aqi.length - 1]);
+                document.getElementById("air-value").textContent = currentAQI;
                 
                 var judgment = "";
-                if (currentPM25 <= 12) {
-                    judgment = "Aria Buona";
-                } else if (currentPM25 <= 35) {
-                    judgment = "Aria Moderata";
-                } else if (currentPM25 <= 55) {
-                    judgment = "Aria Insalubre";
+                if (currentAQI <= 20) {
+                    judgment = "Ottima";
+                } else if (currentAQI <= 40) {
+                    judgment = "Buona";
+                } else if (currentAQI <= 60) {
+                    judgment = "Moderata";
+                } else if (currentAQI <= 80) {
+                    judgment = "Scarsa";
                 } else {
-                    judgment = "Aria Pericolosa";
+                    judgment = "Pessima";
                 }
                 document.getElementById("air-judgment").textContent = judgment;
                 
                 // Sparkline - ultime 24 ore
-                if (data.hourly.pm2_5 && data.hourly.pm2_5.length >= 24) {
-                    var last24 = data.hourly.pm2_5.slice(-24);
+                if (data.hourly.european_aqi && data.hourly.european_aqi.length >= 24) {
+                    var last24 = data.hourly.european_aqi.slice(-24);
                     var maxVal = Math.max.apply(null, last24);
                     var minVal = Math.min.apply(null, last24);
                     var range = maxVal - minVal || 1;
@@ -567,11 +642,24 @@
         // DARK MODE AUTOMATICA
         // ============================================
         function checkDarkMode(data) {
-            if (data.daily && data.daily.sunset && data.daily.sunset.length > 0) {
-                var sunset = new Date(data.daily.sunset[0]);
+            if (data.daily && data.daily.sunrise && data.daily.sunrise.length > 0 && 
+                data.daily.sunset && data.daily.sunset.length > 0) {
+                var sunriseStr = data.daily.sunrise[0];
+                var sunsetStr = data.daily.sunset[0];
+                
+                // Parse ISO date strings
+                var sunrise = new Date(sunriseStr);
+                var sunset = new Date(sunsetStr);
                 var now = new Date();
                 
-                if (now.getTime() > sunset.getTime()) {
+                // Debug info
+                var debugText = "S:" + formatTimeDebug(sunrise) + " T:" + formatTimeDebug(sunset) + " NOW:" + formatTimeDebug(now);
+                console.log(debugText);
+                
+                // Logica corretta: dark mode se prima dell'alba o dopo il tramonto
+                var isDark = (now.getTime() < sunrise.getTime() || now.getTime() > sunset.getTime());
+                
+                if (isDark) {
                     document.body.classList.add("dark-mode");
                 } else {
                     document.body.classList.remove("dark-mode");
@@ -579,10 +667,87 @@
             }
         }
         
+        function formatTimeDebug(date) {
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            return (hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes;
+        }
+        
+        // ============================================
+        // PREVISIONI PROSSIMI GIORNI
+        // ============================================
+        function getWeatherIconSVG(code) {
+            // Icone SVG inline minimali
+            switch(code) {
+                case 0: // Sereno
+                    return '<svg class="forecast-day-icon" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+                case 1:
+                case 2:
+                case 3: // Parzialmente nuvoloso
+                    return '<svg class="forecast-day-icon" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="5" opacity="0.5"/><path d="M 18 10 A 4 4 0 0 1 18 18 H 6 A 4 4 0 0 1 6 10 A 4 4 0 0 1 10 6 A 4 4 0 0 1 14 8 A 4 4 0 0 1 18 10 Z"/></svg>';
+                case 45:
+                case 48: // Nebbia
+                    return '<svg class="forecast-day-icon" viewBox="0 0 24 24" fill="currentColor"><ellipse cx="6" cy="10" rx="4" ry="2" opacity="0.5"/><ellipse cx="12" cy="12" rx="4" ry="2" opacity="0.5"/><ellipse cx="18" cy="14" rx="4" ry="2" opacity="0.5"/></svg>';
+                case 51:
+                case 53:
+                case 55:
+                case 61:
+                case 63:
+                case 65:
+                case 80:
+                case 81:
+                case 82: // Pioggia
+                    return '<svg class="forecast-day-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M 18 10 A 4 4 0 0 1 18 18 H 6 A 4 4 0 0 1 6 10 A 4 4 0 0 1 10 6 A 4 4 0 0 1 14 8 A 4 4 0 0 1 18 10 Z"/><line x1="10" y1="18" x2="10" y2="22"/><line x1="14" y1="18" x2="14" y2="22"/><line x1="12" y1="18" x2="12" y2="22"/></svg>';
+                case 71:
+                case 73:
+                case 75:
+                case 77:
+                case 85:
+                case 86: // Neve
+                    return '<svg class="forecast-day-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M 18 10 A 4 4 0 0 1 18 18 H 6 A 4 4 0 0 1 6 10 A 4 4 0 0 1 10 6 A 4 4 0 0 1 14 8 A 4 4 0 0 1 18 10 Z"/><path d="M 12 18 L 10 20 M 12 18 L 14 20 M 12 18 L 12 22" stroke="currentColor" stroke-width="1.5"/></svg>';
+                case 95:
+                case 96:
+                case 99: // Temporale
+                    return '<svg class="forecast-day-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M 18 10 A 4 4 0 0 1 18 18 H 6 A 4 4 0 0 1 6 10 A 4 4 0 0 1 10 6 A 4 4 0 0 1 14 8 A 4 4 0 0 1 18 10 Z"/><path d="M 10 16 L 14 16 L 12 20 Z" fill="currentColor"/></svg>';
+                default: // Default nuvola
+                    return '<svg class="forecast-day-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M 18 10 A 4 4 0 0 1 18 18 H 6 A 4 4 0 0 1 6 10 A 4 4 0 0 1 10 6 A 4 4 0 0 1 14 8 A 4 4 0 0 1 18 10 Z"/></svg>';
+            }
+        }
+        
+        function updateForecastDays(data) {
+            if (data.daily && data.daily.time && data.daily.time.length > 1) {
+                var daysShort = ["DOM", "LUN", "MAR", "MER", "GIO", "VEN", "SAB"];
+                var html = "";
+                
+                // Mostra Oggi+1, Oggi+2, Oggi+3 (indici 1, 2, 3)
+                for (var i = 1; i <= 3 && i < data.daily.time.length; i++) {
+                    var dateStr = data.daily.time[i];
+                    var date = new Date(dateStr);
+                    var dayName = daysShort[date.getDay()];
+                    
+                    var weathercode = data.daily.weathercode[i];
+                    var tempMin = data.daily.temperature_2m_min[i];
+                    var tempMax = data.daily.temperature_2m_max[i];
+                    
+                    var iconSVG = getWeatherIconSVG(weathercode);
+                    var tempStr = Math.round(tempMin) + "° / " + Math.round(tempMax) + "°";
+                    
+                    html += '<div class="forecast-day">';
+                    html += '<span class="forecast-day-name">' + dayName + '</span>';
+                    html += iconSVG;
+                    html += '<span class="forecast-day-temp">' + tempStr + '</span>';
+                    html += '</div>';
+                }
+                
+                document.getElementById("forecast-days-list").innerHTML = html;
+            }
+        }
+        
         // ============================================
         // INIZIALIZZAZIONE
         // ============================================
         loadWeatherData();
+        loadAirQualityData();
         updateMoonPhase();
         
         // Refresh ogni 30 minuti
