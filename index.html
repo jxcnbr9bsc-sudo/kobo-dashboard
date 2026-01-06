@@ -105,52 +105,6 @@
             overflow: visible;
         }
         
-        /* Layout Orizzontale (più largo che alto) */
-        .layout-horizontal {
-            display: table;
-            width: 100%;
-            height: 100%;
-        }
-        
-        .layout-horizontal-content {
-            display: table-cell;
-            vertical-align: middle;
-            text-align: left;
-            padding: 15px;
-        }
-        
-        .layout-horizontal-item {
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 15px;
-        }
-        
-        .layout-horizontal-item:last-child {
-            margin-right: 0;
-        }
-        
-        .layout-horizontal-icon {
-            display: inline-block;
-            vertical-align: middle;
-            width: 32px;
-            height: 32px;
-            margin-right: 10px;
-        }
-        
-        /* Layout Verticale (più alto che largo o quadrato) */
-        .layout-vertical {
-            display: table;
-            width: 100%;
-            height: 100%;
-        }
-        
-        .layout-vertical-content {
-            display: table-cell;
-            vertical-align: middle;
-            text-align: center;
-            padding: 15px;
-        }
-        
         .temp-section {
             width: 45%;
             height: 100%;
@@ -162,6 +116,17 @@
             box-sizing: border-box;
             overflow: hidden;
             position: relative;
+        }
+        
+        .temp-section .layout-vertical-content {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: center;
+            padding: 15px;
+        }
+        
+        .temp-section {
+            display: table;
         }
         
         .weather-temp {
@@ -183,6 +148,7 @@
             float: left;
             margin-left: 2%;
             overflow: hidden;
+            text-align: center;
         }
         
         .weather-wind,
@@ -238,32 +204,31 @@
             width: 100%;
             margin-bottom: 10px;
             overflow: hidden;
+            text-align: center;
         }
         
         .air-title {
-            font-size: 18px;
+            font-size: 21px;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: -0.02em;
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 12px;
+            display: block;
+            margin-bottom: 5px;
         }
         
         .air-value {
-            font-size: 46px;
+            font-size: 53px;
             font-weight: 700;
             line-height: 1;
-            display: inline-block;
-            vertical-align: middle;
+            display: block;
+            margin-bottom: 5px;
         }
         
         .air-judgment {
-            font-size: 20px;
+            font-size: 23px;
             font-weight: 400;
             margin-bottom: 10px;
-            display: inline-block;
-            vertical-align: middle;
+            text-align: center;
         }
         
         .air-sparkline {
@@ -299,7 +264,7 @@
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: -0.02em;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             text-align: left;
         }
         
@@ -417,7 +382,6 @@
             text-align: center;
         }
         
-        
         /* Utility */
         .clearfix:after {
             content: "";
@@ -439,7 +403,7 @@
         
         <!-- Riga Principale: Temp + Info Meteo -->
         <div class="main-row clearfix">
-            <div class="temp-section layout-vertical">
+            <div class="temp-section">
                 <div class="layout-vertical-content">
                     <div class="weather-temp" id="weather-temp">--°C</div>
                     <div class="weather-desc" id="weather-desc">Caricamento...</div>
@@ -537,7 +501,6 @@
                 </div>
             </div>
         </div>
-        
     </div>
 
     <script>
@@ -705,8 +668,6 @@
                     document.getElementById("rain-value").textContent = Math.round(rainProb);
                 }
             }
-            
-            // Sole (già aggiornato da updateSunTimes)
         }
         
         // ============================================
