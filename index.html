@@ -177,18 +177,17 @@
             margin-right: 8px;
         }
         
-        /* Riga Aria + Previsioni Orizzontale */
-        .middle-row {
+        /* Riga Aria Orizzontale */
+        .air-row {
             width: 100%;
-            height: 140px;
+            height: 120px;
             margin-bottom: 15px;
             overflow: hidden;
         }
         
         .air-panel {
-            width: 48%;
+            width: 100%;
             height: 100%;
-            float: left;
             border: 2px solid #FFFFFF;
             -webkit-border-radius: 15px;
             -moz-border-radius: 15px;
@@ -202,13 +201,27 @@
             padding: 15px;
             height: 100%;
             box-sizing: border-box;
+            display: table;
+            width: 100%;
+        }
+        
+        .air-left {
+            display: table-cell;
+            vertical-align: middle;
+            width: 35%;
+            padding-right: 20px;
+        }
+        
+        .air-right {
+            display: table-cell;
+            vertical-align: middle;
+            width: 65%;
         }
         
         .air-header {
             width: 100%;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             overflow: hidden;
-            text-align: center;
         }
         
         .air-title {
@@ -216,39 +229,46 @@
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: -0.02em;
-            display: block;
-            margin-bottom: 5px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 15px;
         }
         
         .air-value {
             font-size: 53px;
             font-weight: 700;
             line-height: 1;
-            display: block;
-            margin-bottom: 5px;
+            display: inline-block;
+            vertical-align: middle;
         }
         
         .air-judgment {
             font-size: 23px;
             font-weight: 400;
-            margin-bottom: 10px;
-            text-align: center;
+            margin-top: 5px;
+            text-align: left;
         }
         
         .air-sparkline {
             width: 100%;
             max-width: 100%;
-            height: 40px;
+            height: 60px;
             overflow: visible;
             padding: 8px 0;
             box-sizing: border-box;
         }
         
+        /* Riga Previsioni */
+        .forecast-row {
+            width: 100%;
+            height: 140px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        
         .forecast-section {
-            width: 50%;
+            width: 100%;
             height: 100%;
-            float: left;
-            margin-left: 2%;
             border: 2px solid #FFFFFF;
             -webkit-border-radius: 15px;
             -moz-border-radius: 15px;
@@ -398,7 +418,7 @@
 <body>
     <div id="app-container">
         <!-- Indicatore versione -->
-        <div class="version-indicator">v11-ALIGNED</div>
+        <div class="version-indicator">v12-AIR-FIXED</div>
         
         <!-- Top Bar -->
         <div class="top-bar clearfix">
@@ -434,20 +454,28 @@
             </div>
         </div>
         
-        <!-- Riga Media: Aria + Previsioni -->
-        <div class="middle-row clearfix">
+        <!-- Riga Aria: Layout Orizzontale -->
+        <div class="air-row clearfix">
             <div class="air-panel">
                 <div class="air-content">
-                    <div class="air-header">
-                        <span class="air-title">Qualità Aria</span>
-                        <span class="air-value" id="air-value">--</span>
+                    <div class="air-left">
+                        <div class="air-header">
+                            <span class="air-title">Qualità Aria</span>
+                            <span class="air-value" id="air-value">--</span>
+                        </div>
+                        <div class="air-judgment" id="air-judgment">Caricamento...</div>
                     </div>
-                    <div class="air-judgment" id="air-judgment">Caricamento...</div>
-                    <svg class="air-sparkline" id="air-sparkline" viewBox="0 0 300 40" preserveAspectRatio="none">
-                        <polyline id="air-line" fill="none" stroke="#FFFFFF" stroke-width="2"/>
-                    </svg>
+                    <div class="air-right">
+                        <svg class="air-sparkline" id="air-sparkline" viewBox="0 0 300 60" preserveAspectRatio="none">
+                            <polyline id="air-line" fill="none" stroke="#FFFFFF" stroke-width="2"/>
+                        </svg>
+                    </div>
                 </div>
             </div>
+        </div>
+        
+        <!-- Riga Previsioni -->
+        <div class="forecast-row clearfix">
             <div class="forecast-section">
                 <div class="forecast-content">
                     <div class="forecast-title">Prossimi Giorni</div>
@@ -704,17 +732,17 @@
                     var minVal = Math.min.apply(null, last24);
                     var range = maxVal - minVal || 1;
                     
-                    // Margini: 6px in alto e 6px in basso (su viewBox 40px, area utile 28px)
-                    var topMargin = 6;
-                    var bottomMargin = 6;
-                    var usableHeight = 40 - topMargin - bottomMargin;
+                    // Margini: 8px in alto e 8px in basso (su viewBox 60px, area utile 44px)
+                    var topMargin = 8;
+                    var bottomMargin = 8;
+                    var usableHeight = 60 - topMargin - bottomMargin;
                     
                     var points = [];
                     for (var i = 0; i < last24.length; i++) {
                         var x = (i / (last24.length - 1)) * 300;
-                        // Inverti Y: valore minimo va in basso (40 - bottomMargin), valore massimo va in alto (topMargin)
+                        // Inverti Y: valore minimo va in basso (60 - bottomMargin), valore massimo va in alto (topMargin)
                         var normalizedValue = (last24[i] - minVal) / range;
-                        var y = 40 - bottomMargin - (normalizedValue * usableHeight);
+                        var y = 60 - bottomMargin - (normalizedValue * usableHeight);
                         points.push(x + "," + y);
                     }
                     
