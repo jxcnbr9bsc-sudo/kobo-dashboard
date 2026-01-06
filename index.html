@@ -57,6 +57,10 @@
             box-sizing: border-box;
         }
         
+        #app-container > * {
+            clear: both;
+        }
+        
         /* Indicatore versione */
         .version-indicator {
             position: absolute;
@@ -102,7 +106,7 @@
             width: 100%;
             height: 140px;
             margin-bottom: 15px;
-            overflow: visible;
+            overflow: hidden;
         }
         
         .temp-section {
@@ -116,6 +120,7 @@
             box-sizing: border-box;
             overflow: hidden;
             position: relative;
+            display: table;
         }
         
         .temp-section .layout-vertical-content {
@@ -123,10 +128,8 @@
             vertical-align: middle;
             text-align: center;
             padding: 15px;
-        }
-        
-        .temp-section {
-            display: table;
+            width: 100%;
+            height: 100%;
         }
         
         .weather-temp {
@@ -149,6 +152,7 @@
             margin-left: 2%;
             overflow: hidden;
             text-align: center;
+            box-sizing: border-box;
         }
         
         .weather-wind,
@@ -178,7 +182,7 @@
             width: 100%;
             height: 140px;
             margin-bottom: 15px;
-            overflow: visible;
+            overflow: hidden;
         }
         
         .air-panel {
@@ -251,6 +255,7 @@
             border-radius: 15px;
             box-sizing: border-box;
             overflow: hidden;
+            position: relative;
         }
         
         .forecast-content {
@@ -311,7 +316,7 @@
             width: 100%;
             height: 180px;
             margin-bottom: 15px;
-            overflow: visible;
+            overflow: hidden;
         }
         
         .metric-panel {
@@ -393,7 +398,7 @@
 <body>
     <div id="app-container">
         <!-- Indicatore versione -->
-        <div class="version-indicator">v10-FIXED-BORDERS</div>
+        <div class="version-indicator">v11-ALIGNED</div>
         
         <!-- Top Bar -->
         <div class="top-bar clearfix">
