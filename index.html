@@ -105,6 +105,52 @@
             overflow: hidden;
         }
         
+        /* Layout Orizzontale (più largo che alto) */
+        .layout-horizontal {
+            display: table;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .layout-horizontal-content {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: left;
+            padding: 15px;
+        }
+        
+        .layout-horizontal-item {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 15px;
+        }
+        
+        .layout-horizontal-item:last-child {
+            margin-right: 0;
+        }
+        
+        .layout-horizontal-icon {
+            display: inline-block;
+            vertical-align: middle;
+            width: 32px;
+            height: 32px;
+            margin-right: 10px;
+        }
+        
+        /* Layout Verticale (più alto che largo o quadrato) */
+        .layout-vertical {
+            display: table;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .layout-vertical-content {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: center;
+            padding: 15px;
+        }
+        
         .temp-section {
             width: 45%;
             height: 100%;
@@ -113,9 +159,7 @@
             -webkit-border-radius: 15px;
             -moz-border-radius: 15px;
             border-radius: 15px;
-            padding: 12px;
             box-sizing: border-box;
-            text-align: center;
             overflow: hidden;
         }
         
@@ -123,13 +167,13 @@
             font-size: 79px;
             font-weight: 700;
             line-height: 1;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
         
         .weather-desc {
             font-size: 20px;
             font-weight: 400;
-            margin-bottom: 3px;
+            margin-bottom: 5px;
         }
         
         .weather-info {
@@ -138,21 +182,28 @@
             float: left;
             margin-left: 2%;
             overflow: hidden;
-            text-align: center;
         }
         
         .weather-wind,
         .weather-rain {
             font-size: 20px;
             font-weight: 400;
-            margin-bottom: 8px;
-            padding: 10px;
+            margin-bottom: 10px;
+            padding: 12px 15px;
             border: 2px solid #FFFFFF;
             -webkit-border-radius: 10px;
             -moz-border-radius: 10px;
             border-radius: 10px;
             box-sizing: border-box;
-            text-align: center;
+        }
+        
+        .weather-wind-icon,
+        .weather-rain-icon {
+            display: inline-block;
+            vertical-align: middle;
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
         }
         
         /* Riga Aria + Previsioni Orizzontale */
@@ -171,17 +222,20 @@
             -webkit-border-radius: 15px;
             -moz-border-radius: 15px;
             border-radius: 15px;
-            padding: 12px;
             box-sizing: border-box;
             overflow: hidden;
-            text-align: center;
+        }
+        
+        .air-content {
+            padding: 15px;
+            height: 100%;
+            box-sizing: border-box;
         }
         
         .air-header {
             width: 100%;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             overflow: hidden;
-            text-align: center;
         }
         
         .air-title {
@@ -189,23 +243,25 @@
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: -0.02em;
-            display: block;
-            margin-bottom: 5px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 12px;
         }
         
         .air-value {
             font-size: 46px;
             font-weight: 700;
             line-height: 1;
-            display: block;
-            margin-bottom: 5px;
+            display: inline-block;
+            vertical-align: middle;
         }
         
         .air-judgment {
             font-size: 20px;
             font-weight: 400;
-            margin-bottom: 8px;
-            text-align: center;
+            margin-bottom: 10px;
+            display: inline-block;
+            vertical-align: middle;
         }
         
         .air-sparkline {
@@ -224,10 +280,14 @@
             -webkit-border-radius: 15px;
             -moz-border-radius: 15px;
             border-radius: 15px;
-            padding: 12px;
             box-sizing: border-box;
             overflow: hidden;
-            text-align: center;
+        }
+        
+        .forecast-content {
+            padding: 15px;
+            height: 100%;
+            box-sizing: border-box;
         }
         
         .forecast-title {
@@ -235,8 +295,8 @@
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: -0.02em;
-            margin-bottom: 10px;
-            text-align: center;
+            margin-bottom: 12px;
+            text-align: left;
         }
         
         .forecast-days-list {
@@ -245,10 +305,10 @@
         }
         
         .forecast-day {
-            width: 30%;
-            float: left;
-            margin-right: 3%;
-            text-align: center;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 15px;
+            text-align: left;
         }
         
         .forecast-day:last-child {
@@ -259,18 +319,22 @@
             font-size: 15px;
             font-weight: 500;
             margin-bottom: 5px;
+            display: block;
         }
         
         .forecast-day-icon {
-            width: 30px;
-            height: 30px;
+            width: 28px;
+            height: 28px;
             display: inline-block;
-            margin: 5px 0;
+            vertical-align: middle;
+            margin-right: 8px;
         }
         
         .forecast-day-temp {
             font-size: 18px;
             font-weight: 400;
+            display: inline-block;
+            vertical-align: middle;
         }
         
         /* Riga Metriche Orizzontale */
@@ -289,11 +353,23 @@
             -webkit-border-radius: 15px;
             -moz-border-radius: 15px;
             border-radius: 15px;
-            padding: 12px;
             margin-right: 2%;
             box-sizing: border-box;
-            text-align: center;
             overflow: hidden;
+        }
+        
+        .metric-content {
+            padding: 15px;
+            height: 100%;
+            box-sizing: border-box;
+            display: table;
+            width: 100%;
+        }
+        
+        .metric-inner {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: center;
         }
         
         .metric-panel:last-child {
@@ -345,21 +421,22 @@
             -webkit-border-radius: 15px;
             -moz-border-radius: 15px;
             border-radius: 15px;
-            padding: 12px;
             box-sizing: border-box;
             overflow: hidden;
         }
         
         .sun-moon-content {
             width: 100%;
+            height: 100%;
             overflow: hidden;
+            padding: 15px;
+            box-sizing: border-box;
         }
         
         .sun-item, .moon-item {
             width: 48%;
             float: left;
-            text-align: center;
-            padding: 5px;
+            padding: 0 15px;
             box-sizing: border-box;
         }
         
@@ -368,19 +445,31 @@
             border-right: 2px solid #FFFFFF;
         }
         
-        .sun-icon, .moon-icon {
-            width: 40px;
-            height: 40px;
+        .sun-item-content,
+        .moon-item-content {
             display: inline-block;
-            margin-bottom: 8px;
+            vertical-align: middle;
+        }
+        
+        .sun-icon, .moon-icon {
+            width: 36px;
+            height: 36px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 12px;
+        }
+        
+        .sun-times-group {
+            display: inline-block;
+            vertical-align: middle;
         }
         
         .sunrise-time, .sunset-time {
             font-size: 20px;
             font-weight: 500;
-            margin: 3px 0;
+            margin: 2px 0;
             display: block;
-            text-align: center;
+            text-align: left;
         }
         
         .moon-phase-name {
@@ -388,7 +477,8 @@
             font-weight: 400;
             text-transform: uppercase;
             letter-spacing: -0.02em;
-            text-align: center;
+            display: inline-block;
+            vertical-align: middle;
         }
         
         /* Utility */
@@ -402,7 +492,7 @@
 <body>
     <div id="app-container">
         <!-- Indicatore versione -->
-        <div class="version-indicator">v7-CENTERED</div>
+        <div class="version-indicator">v8-ADAPTIVE-LAYOUT</div>
         
         <!-- Top Bar -->
         <div class="top-bar clearfix">
@@ -412,31 +502,51 @@
         
         <!-- Riga Principale: Temp + Info Meteo -->
         <div class="main-row clearfix">
-            <div class="temp-section">
-                <div class="weather-temp" id="weather-temp">--°C</div>
-                <div class="weather-desc" id="weather-desc">Caricamento...</div>
+            <div class="temp-section layout-vertical">
+                <div class="layout-vertical-content">
+                    <div class="weather-temp" id="weather-temp">--°C</div>
+                    <div class="weather-desc" id="weather-desc">Caricamento...</div>
+                </div>
             </div>
             <div class="weather-info">
-                <div class="weather-wind" id="weather-wind"></div>
-                <div class="weather-rain" id="weather-rain"></div>
+                <div class="weather-wind" id="weather-wind">
+                    <svg class="weather-wind-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="12" r="2" fill="currentColor"/>
+                        <path d="M 2 12 Q 6 8 10 12 Q 14 16 18 12" stroke="currentColor" stroke-width="2" fill="none"/>
+                        <path d="M 4 8 Q 8 4 12 8 Q 16 12 20 8" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.7"/>
+                    </svg>
+                    <span id="weather-wind-text"></span>
+                </div>
+                <div class="weather-rain" id="weather-rain">
+                    <svg class="weather-rain-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M 12 2 A 4 4 0 0 1 12 10 A 4 4 0 0 1 12 2 Z M 6 10 A 4 4 0 0 1 6 18 A 4 4 0 0 1 6 10 Z M 18 10 A 4 4 0 0 1 18 18 A 4 4 0 0 1 18 10 Z" fill="currentColor"/>
+                        <line x1="10" y1="18" x2="10" y2="22" stroke="currentColor" stroke-width="2"/>
+                        <line x1="14" y1="18" x2="14" y2="22" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                    <span id="weather-rain-text"></span>
+                </div>
             </div>
         </div>
         
         <!-- Riga Media: Aria + Previsioni -->
         <div class="middle-row clearfix">
             <div class="air-panel">
-                <div class="air-header clearfix">
-                    <div class="air-title">Qualità Aria</div>
-                    <div class="air-value" id="air-value">--</div>
+                <div class="air-content">
+                    <div class="air-header">
+                        <span class="air-title">Qualità Aria</span>
+                        <span class="air-value" id="air-value">--</span>
+                    </div>
+                    <div class="air-judgment" id="air-judgment">Caricamento...</div>
+                    <svg class="air-sparkline" id="air-sparkline" viewBox="0 0 300 35" preserveAspectRatio="none">
+                        <polyline id="air-line" fill="none" stroke="#FFFFFF" stroke-width="2"/>
+                    </svg>
                 </div>
-                <div class="air-judgment" id="air-judgment">Caricamento...</div>
-                <svg class="air-sparkline" id="air-sparkline" viewBox="0 0 300 35" preserveAspectRatio="none">
-                    <polyline id="air-line" fill="none" stroke="#FFFFFF" stroke-width="2"/>
-                </svg>
             </div>
             <div class="forecast-section">
-                <div class="forecast-title">Prossimi Giorni</div>
-                <div class="forecast-days-list clearfix" id="forecast-days-list"></div>
+                <div class="forecast-content">
+                    <div class="forecast-title">Prossimi Giorni</div>
+                    <div class="forecast-days-list" id="forecast-days-list"></div>
+                </div>
             </div>
         </div>
         
@@ -444,34 +554,50 @@
         <div class="metrics-row clearfix">
             <!-- Vento -->
             <div class="metric-panel">
-                <div class="metric-title">Vento</div>
-                <div class="metric-value" id="wind-value">--</div>
-                <div class="metric-label">km/h</div>
+                <div class="metric-content">
+                    <div class="metric-inner">
+                        <div class="metric-title">Vento</div>
+                        <div class="metric-value" id="wind-value">--</div>
+                        <div class="metric-label">km/h</div>
+                    </div>
+                </div>
             </div>
             
             <!-- Pioggia -->
             <div class="metric-panel">
-                <div class="metric-title">Pioggia</div>
-                <div class="metric-value" id="rain-value">--</div>
-                <div class="metric-label">%</div>
+                <div class="metric-content">
+                    <div class="metric-inner">
+                        <div class="metric-title">Pioggia</div>
+                        <div class="metric-value" id="rain-value">--</div>
+                        <div class="metric-label">%</div>
+                    </div>
+                </div>
             </div>
             
             <!-- Sole -->
             <div class="metric-panel">
-                <div class="metric-title">Sole</div>
-                <div class="metric-sun-times" id="sunrise-value">--:--</div>
-                <div class="metric-sun-label">Alba</div>
-                <div class="metric-sun-times" id="sunset-value">--:--</div>
-                <div class="metric-sun-label">Tramonto</div>
+                <div class="metric-content">
+                    <div class="metric-inner">
+                        <div class="metric-title">Sole</div>
+                        <div class="metric-sun-times" id="sunrise-value">--:--</div>
+                        <div class="metric-sun-label">Alba</div>
+                        <div class="metric-sun-times" id="sunset-value">--:--</div>
+                        <div class="metric-sun-label">Tramonto</div>
+                    </div>
+                </div>
             </div>
             
             <!-- Luna -->
             <div class="metric-panel">
-                <div class="metric-title">Luna</div>
-                <svg class="moon-icon" id="moon-icon" viewBox="0 0 100 100" style="width: 60px; height: 60px; margin: 5px auto; display: block;">
-                    <circle cx="50" cy="50" r="45" fill="currentColor"/>
-                </svg>
-                <div class="metric-label" id="moon-phase-name" style="font-size: 14px; margin-top: 5px;">Caricamento...</div>
+                <div class="metric-content">
+                    <div class="metric-inner">
+                        <div class="metric-title">Luna</div>
+                        <svg class="moon-icon" id="moon-icon" viewBox="0 0 100 100" style="width: 60px; height: 60px; margin: 5px auto; display: block;">
+                            <circle cx="50" cy="50" r="45" fill="currentColor"/>
+                        </svg>
+                        <div class="metric-label" id="moon-phase-name" style="font-size: 14px; margin-top: 5px;">Caricamento...</div>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -479,25 +605,31 @@
         <div class="sun-moon-panel">
             <div class="sun-moon-content clearfix">
                 <div class="sun-item">
-                    <svg class="sun-icon" viewBox="0 0 24 24" fill="currentColor">
-                        <circle cx="12" cy="12" r="5"/>
-                        <line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" stroke-width="2"/>
-                        <line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" stroke-width="2"/>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" stroke-width="2"/>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2"/>
-                        <line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" stroke-width="2"/>
-                        <line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" stroke-width="2"/>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor" stroke-width="2"/>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor" stroke-width="2"/>
-                    </svg>
-                    <div class="sunrise-time" id="sunrise-time">--:--</div>
-                    <div class="sunset-time" id="sunset-time">--:--</div>
+                    <div class="sun-item-content">
+                        <svg class="sun-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <circle cx="12" cy="12" r="5"/>
+                            <line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" stroke-width="2"/>
+                            <line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" stroke-width="2"/>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" stroke-width="2"/>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2"/>
+                            <line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" stroke-width="2"/>
+                            <line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" stroke-width="2"/>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor" stroke-width="2"/>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                        <div class="sun-times-group">
+                            <div class="sunrise-time" id="sunrise-time">--:--</div>
+                            <div class="sunset-time" id="sunset-time">--:--</div>
+                        </div>
+                    </div>
                 </div>
                 <div class="moon-item">
-                    <svg class="moon-icon" id="moon-icon-bottom" viewBox="0 0 100 100">
-                        <circle cx="50" cy="50" r="45" fill="currentColor"/>
-                    </svg>
-                    <div class="moon-phase-name" id="moon-phase-name-bottom">Caricamento...</div>
+                    <div class="moon-item-content">
+                        <svg class="moon-icon" id="moon-icon-bottom" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" fill="currentColor"/>
+                        </svg>
+                        <span class="moon-phase-name" id="moon-phase-name-bottom">Caricamento...</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -637,13 +769,19 @@
             
             if (data.current_weather && data.current_weather.windspeed !== undefined) {
                 var windSpeed = Math.round(data.current_weather.windspeed);
-                document.getElementById("weather-wind").textContent = "Vento: " + windSpeed + " km/h";
+                var windTextEl = document.getElementById("weather-wind-text");
+                if (windTextEl) {
+                    windTextEl.textContent = windSpeed + " km/h";
+                }
             }
             
             if (data.daily && data.daily.precipitation_probability_max && data.daily.precipitation_probability_max.length > 0) {
                 var rainProb = data.daily.precipitation_probability_max[0];
                 if (rainProb !== null && rainProb !== undefined) {
-                    document.getElementById("weather-rain").textContent = "Pioggia: " + Math.round(rainProb) + "%";
+                    var rainTextEl = document.getElementById("weather-rain-text");
+                    if (rainTextEl) {
+                        rainTextEl.textContent = Math.round(rainProb) + "%";
+                    }
                 }
             }
         }
