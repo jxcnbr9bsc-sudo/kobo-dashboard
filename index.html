@@ -564,6 +564,10 @@
         var OPENMETEO_URL = "https://api.open-meteo.com/v1/forecast?latitude=45.4064&longitude=11.8768&current_weather=true&daily=temperature_2m_max,temperature_2m_min,weathercode,windspeed_10m_max,precipitation_probability_max,sunrise,sunset&timezone=Europe%2FRome&forecast_days=4";
         
         var AIR_QUALITY_URL = "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=45.4064&longitude=11.8768&hourly=european_aqi&timezone=Europe%2FRome&forecast_days=1";
+
+        // Variabili globali per alba/tramonto
+        var globalSunrise = null;
+        var globalSunset = null;
         
         // ============================================
         // FUNZIONE OROLOGIO
@@ -641,7 +645,7 @@
                         updateSunTimes(data);
                         updateForecastDays(data);
                         updateMetrics(data);
-                        checkDarkMode(data);
+                        checkDarkMode(); // Ora usa variabili globali
                     } catch(e) {
                         console.error("Errore parsing dati meteo");
                     }
@@ -776,7 +780,10 @@
         // ============================================
         function updateSunTimes(data) {
             if (data.daily && data.daily.sunrise && data.daily.sunrise.length > 0) {
-                var sunrise = new Date(data.daily.sunrise[0]);
+                // Aggiorna variabile globale
+                globalSunrise = new Date(data.daily.sunrise[0]);
+                
+                var sunrise = globalSunrise;
                 var hours = sunrise.getHours();
                 var minutes = sunrise.getMinutes();
                 var sunriseStr = (hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes;
@@ -784,7 +791,10 @@
             }
             
             if (data.daily && data.daily.sunset && data.daily.sunset.length > 0) {
-                var sunset = new Date(data.daily.sunset[0]);
+                // Aggiorna variabile globale
+                globalSunset = new Date(data.daily.sunset[0]);
+                
+                var sunset = globalSunset;
                 var hours = sunset.getHours();
                 var minutes = sunset.getMinutes();
                 var sunsetStr = (hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes;
@@ -857,26 +867,34 @@
         // ============================================
         // DARK MODE AUTOMATICA
         // ============================================
-        function checkDarkMode(data) {
-            if (data.daily && data.daily.sunrise && data.daily.sunrise.length > 0 && 
-                data.daily.sunset && data.daily.sunset.length > 0) {
-                var sunriseStr = data.daily.sunrise[0];
-                var sunsetStr = data.daily.sunset[0];
-                
-                var sunrise = new Date(sunriseStr);
-                var sunset = new Date(sunsetStr);
-                var now = new Date();
-                
-                var debugText = "S:" + formatTimeDebug(sunrise) + " T:" + formatTimeDebug(sunset) + " NOW:" + formatTimeDebug(now);
-                console.log(debugText);
-                
-                var isDark = (now.getTime() < sunrise.getTime() || now.getTime() > sunset.getTime());
-                
-                if (isDark) {
-                    document.body.classList.add("dark-mode");
-                } else {
-                    document.body.classList.remove("dark-mode");
-                }
+        function checkDarkMode() {
+            // Se non abbiamo ancora i dati, usciamo
+            if (!globalSunrise || !globalSunset) return;
+
+            var now = new Date();
+            
+            // Crea oggetti Date per Alba e Tramonto di OGGI
+            // Copia ore e minuti dai dati scaricati, ma usa data odierna
+            var sunriseToday = new Date();
+            sunriseToday.setHours(globalSunrise.getHours());
+            sunriseToday.setMinutes(globalSunrise.getMinutes());
+            sunriseToday.setSeconds(0);
+            
+            var sunsetToday = new Date();
+            sunsetToday.setHours(globalSunset.getHours());
+            sunsetToday.setMinutes(globalSunset.getMinutes());
+            sunsetToday.setSeconds(0);
+            
+            // Debug string (opzionale)
+            // var debugText = "S:" + formatTimeDebug(sunriseToday) + " T:" + formatTimeDebug(sunsetToday) + " NOW:" + formatTimeDebug(now);
+            // console.log(debugText);
+            
+            var isDark = (now.getTime() < sunriseToday.getTime() || now.getTime() > sunsetToday.getTime());
+            
+            if (isDark) {
+                document.body.classList.add("dark-mode");
+            } else {
+                document.body.classList.remove("dark-mode");
             }
         }
         
@@ -956,16 +974,28 @@
         }
         
         // ============================================
-        // INIZIALIZZAZIONE
+        // INIZIALIZZAZIONE & LOOP
         // ============================================
-        loadWeatherData();
-        loadAirQualityData();
-        updateMoonPhase();
         
-        // Refresh ogni 30 minuti
-        setInterval(function() {
-            location.reload();
-        }, 1000 * 60 * 30);
+        function refreshData() {
+            console.log("--> REFRESH DATA STARTED: " + new Date().toLocaleTimeString());
+            loadWeatherData();
+            loadAirQualityData();
+            updateMoonPhase();
+            
+            // Debug prossimo refresh
+            var nextRefresh = new Date(new Date().getTime() + 30 * 60 * 1000);
+            console.log("Prossimo refresh dati: " + nextRefresh.toLocaleTimeString());
+        }
+
+        // 1. Avvio immediato
+        refreshData();
+        
+        // 2. Refresh dati ogni 30 minuti
+        setInterval(refreshData, 1000 * 60 * 30);
+        
+        // 3. Controllo Dark Mode ogni 1 minuto (per scattare all'ora giusta)
+        setInterval(checkDarkMode, 1000 * 60);
     </script>
 </body>
 </html>
